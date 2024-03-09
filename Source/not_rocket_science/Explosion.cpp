@@ -13,7 +13,8 @@ AExplosion::AExplosion()
 void AExplosion::BeginPlay()
 {
 	Super::BeginPlay();
-	CurrentScale = StartScale;
+	NormalizedTimer = 0.0;
+	CurrentScale = FMath::Lerp(StartScale, EndScale, NormalizedTimer);
 
 	ExplosionMesh->SetRelativeScale3D(FVector::One() * CurrentScale);
 }
@@ -22,11 +23,13 @@ void AExplosion::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	CurrentScale = CurrentScale + (EndScale - StartScale) * DeltaTime / ExpansionTime;
+	NormalizedTimer += DeltaTime / ExpansionTime;
 	
-	ExplosionMesh->SetRelativeScale3D(FVector::One() * FMath::Min(CurrentScale, EndScale));
+	CurrentScale = FMath::Lerp(StartScale, EndScale, NormalizedTimer);
+	
+	ExplosionMesh->SetRelativeScale3D(FVector::One() * CurrentScale);
 
-	if (CurrentScale >= EndScale)
+	if (NormalizedTimer >= 1.0)
 	{
 		Destroy();
 	}

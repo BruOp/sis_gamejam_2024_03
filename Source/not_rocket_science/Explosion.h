@@ -30,6 +30,9 @@ protected:
 	float ExpansionTime;
 	
 	float CurrentScale;
+
+	UPROPERTY(BlueprintReadOnly)
+	float NormalizedTimer;
 public:	
 	virtual void Tick(float DeltaTime) override;
 };
