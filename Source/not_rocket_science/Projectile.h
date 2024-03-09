@@ -24,13 +24,21 @@ protected:
 	void UpdatePosition(float DeltaTime);
 	
 	void UpdateVelocity(float DeltaTime);
+
 	
 	UPROPERTY()
 	TArray<TObjectPtr<AGravitationalBody>> GravitationalBodies;
 
 	UPROPERTY(EditAnywhere)
 	FVector Velocity;
+
+	UPROPERTY()
+	bool bIsDestroyed;
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+	void Explode();
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ExplosionActor;
 };
