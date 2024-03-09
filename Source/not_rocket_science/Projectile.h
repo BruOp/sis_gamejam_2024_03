@@ -15,6 +15,9 @@ class NOT_ROCKET_SCIENCE_API AProjectile : public AActor
 public:	
 	AProjectile();
 
+	UFUNCTION(BlueprintCallable, Meta=(Category="Projectile"))
+	void SetVelocity(FVector NewVelocity);
+
 protected:
 	virtual void BeginPlay() override;
 

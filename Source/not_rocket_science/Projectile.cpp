@@ -25,6 +25,11 @@ void AProjectile::BeginPlay()
 	}
 }
 
+void AProjectile::SetVelocity(FVector NewVelocity)
+{
+	Velocity = NewVelocity;
+}
+
 void AProjectile::UpdatePosition(float DeltaTime)
 {
 	FTransform Transform = GetTransform();
