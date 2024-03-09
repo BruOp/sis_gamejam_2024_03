@@ -25,7 +25,7 @@ void AProjectile::BeginPlay()
 	}
 }
 
-void AProjectile::UpdatePositon(float DeltaTime)
+void AProjectile::UpdatePosition(float DeltaTime)
 {
 	FTransform Transform = GetTransform();
 	FVector Position = GetTransform().GetLocation();
@@ -40,20 +40,20 @@ void AProjectile::UpdateVelocity(float DeltaTime)
 
 	for (const auto Body : GravitationalBodies)
 	{
-		float Mass = Body->Mass;
+		const float Mass = Body->Mass;
 		FVector BodyLocation = Body->GetTransform().GetLocation();
 		FVector R = BodyLocation - ProjectileLocation;
-		float DistanceSquared = FMath::Max(FVector::DistSquared(BodyLocation, ProjectileLocation), 0.000001f);
-		Velocity += DeltaTime * R.GetUnsafeNormal() * Mass / DistanceSquared;
+		const float R2= FMath::Max(FVector::DistSquared(BodyLocation, ProjectileLocation), 0.000001f);
+		Velocity += DeltaTime * R.GetUnsafeNormal() * Mass / R2;
 	}
 }
 
 void AProjectile::Tick(float DeltaTime)
 {
-	size_t NumIter = 10;
+	constexpr size_t NumIter = 10;
 	for (int i = 0; i < NumIter; ++i)
 	{
-		UpdatePositon(DeltaTime);
+		UpdatePosition(DeltaTime);
 		UpdateVelocity(DeltaTime);
 	}
 }
