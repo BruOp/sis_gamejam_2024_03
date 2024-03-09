@@ -18,7 +18,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	void UpdatePositon(float DeltaTime);
+	void UpdatePosition(float DeltaTime);
 	
 	void UpdateVelocity(float DeltaTime);
 	
