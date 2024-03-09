@@ -15,19 +15,30 @@ class NOT_ROCKET_SCIENCE_API AProjectile : public AActor
 public:	
 	AProjectile();
 
+	UFUNCTION(BlueprintCallable, Meta=(Category="Projectile"))
+	void SetVelocity(FVector NewVelocity);
+
 protected:
 	virtual void BeginPlay() override;
 
 	void UpdatePosition(float DeltaTime);
 	
 	void UpdateVelocity(float DeltaTime);
+
 	
 	UPROPERTY()
 	TArray<TObjectPtr<AGravitationalBody>> GravitationalBodies;
 
 	UPROPERTY(EditAnywhere)
 	FVector Velocity;
+
+	UPROPERTY()
+	bool bIsDestroyed;
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+	void Explode();
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ExplosionActor;
 };

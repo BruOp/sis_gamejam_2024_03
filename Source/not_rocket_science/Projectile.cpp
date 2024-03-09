@@ -9,6 +9,7 @@
 AProjectile::AProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	bIsDestroyed = false;
 }
 
 void AProjectile::BeginPlay()
@@ -25,13 +26,23 @@ void AProjectile::BeginPlay()
 	}
 }
 
+void AProjectile::SetVelocity(FVector NewVelocity)
+{
+	Velocity = NewVelocity;
+}
+
 void AProjectile::UpdatePosition(float DeltaTime)
 {
 	FTransform Transform = GetTransform();
 	FVector Position = GetTransform().GetLocation();
 	Position += Velocity * DeltaTime;
 	Transform.SetLocation(Position);
-	SetActorTransform(Transform);
+	FHitResult HitResult;
+	SetActorTransform(Transform, true, &HitResult);
+	if (HitResult.bBlockingHit)
+	{
+		Explode();
+	}
 }
 
 void AProjectile::UpdateVelocity(float DeltaTime)
@@ -53,7 +64,20 @@ void AProjectile::Tick(float DeltaTime)
 	constexpr size_t NumIter = 10;
 	for (int i = 0; i < NumIter; ++i)
 	{
+		if (bIsDestroyed)
+		{
+			return;
+		}
 		UpdatePosition(DeltaTime);
 		UpdateVelocity(DeltaTime);
 	}
+}
+
+void AProjectile::Explode()
+{
+	bIsDestroyed = true;
+	Destroy();
+
+	const FVector ProjectileLocation = GetTransform().GetLocation();
+	GetWorld()->SpawnActor(ExplosionActor, &ProjectileLocation, &FRotator::ZeroRotator);
 }
