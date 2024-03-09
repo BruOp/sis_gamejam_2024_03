@@ -37,6 +37,7 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Meta=(Category="Projectile"))
 	void Explode();
 
 	UPROPERTY(EditAnywhere)
