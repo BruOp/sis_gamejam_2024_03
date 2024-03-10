@@ -34,6 +34,8 @@ protected:
 
 	UPROPERTY()
 	bool bIsDestroyed;
+
+	float TimeToAdvance;
 public:	
 	virtual void Tick(float DeltaTime) override;
 
