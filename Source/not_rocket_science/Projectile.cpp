@@ -9,7 +9,7 @@
 AProjectile::AProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	bIsDestroyed = false;
+	bIsDetonated = false;
 }
 
 void AProjectile::BeginPlay()
@@ -54,30 +54,31 @@ void AProjectile::UpdateVelocity(float DeltaTime)
 		const float Mass = Body->Mass;
 		FVector BodyLocation = Body->GetTransform().GetLocation();
 		FVector R = BodyLocation - ProjectileLocation;
-		const float R2= FMath::Max(FVector::DistSquared(BodyLocation, ProjectileLocation), 0.000001f);
+		const float R2 = FMath::Max(FVector::DistSquared(BodyLocation, ProjectileLocation), 0.000001f);
 		Velocity += DeltaTime * R.GetUnsafeNormal() * Mass / R2;
 	}
 }
 
 void AProjectile::Tick(float DeltaTime)
 {
-	constexpr size_t NumIter = 10;
-	for (int i = 0; i < NumIter; ++i)
+	constexpr float FixedTimeStep = 0.001f;
+	TimeToAdvance += DeltaTime * 10.0f;
+
+	while (TimeToAdvance > FixedTimeStep && !bIsDetonated)
 	{
-		if (bIsDestroyed)
-		{
-			return;
-		}
-		UpdatePosition(DeltaTime);
-		UpdateVelocity(DeltaTime);
+		UpdatePosition(FixedTimeStep);
+		UpdateVelocity(FixedTimeStep);
+		TimeToAdvance -= FixedTimeStep;
 	}
 }
 
 void AProjectile::Explode()
 {
-	bIsDestroyed = true;
-	Destroy();
-
+	bIsDetonated = true;
+	
+	RootComponent->SetVisibility(false);
+	
 	const FVector ProjectileLocation = GetTransform().GetLocation();
-	GetWorld()->SpawnActor(ExplosionActor, &ProjectileLocation, &FRotator::ZeroRotator);
+	const FRotator Rotator{90.0, 0.0, 0.0};
+	GetWorld()->SpawnActor(ExplosionActor, &ProjectileLocation, &Rotator);
 }
