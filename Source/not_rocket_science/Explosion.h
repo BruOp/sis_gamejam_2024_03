@@ -26,13 +26,23 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float EndScale;
 
+	// Once scale exceeds this parameter, the explosion no longer causes damage.
+	UPROPERTY(EditAnywhere)
+	float DamageMaxScale;
+
 	UPROPERTY(EditAnywhere)
 	float ExpansionTime;
-	
+
 	float CurrentScale;
 
 	UPROPERTY(BlueprintReadOnly)
 	float NormalizedTimer;
 public:	
 	virtual void Tick(float DeltaTime) override;
+
+private:
+	void DealDamage();
+
+	UPROPERTY(Transient)
+	bool bDamaging = true;
 };
