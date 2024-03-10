@@ -3,3 +3,7 @@
 
 #include "SinglePlayerHud.h"
 
+void ASinglePlayerHud::OnWinScreenContinue()
+{
+    // TODO: tell game mode to load next map
+}

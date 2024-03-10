@@ -7,14 +7,17 @@
 #include "SinglePlayerHud.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class NOT_ROCKET_SCIENCE_API ASinglePlayerHud : public AHUD
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintImplementableEvent)
-	void ShowWinScreen();	
+    UFUNCTION(BlueprintImplementableEvent)
+    void ShowWinScreen(int level, int targetsHit, int shotsTaken);
+
+    UFUNCTION(BlueprintCallable)
+    void OnWinScreenContinue();
 };
