@@ -3,7 +3,10 @@
 
 #include "SinglePlayerHud.h"
 
+#include "SinglePlayerGameMode.h"
+#include "Kismet/GameplayStatics.h"
+
 void ASinglePlayerHud::OnWinScreenContinue()
 {
-    // TODO: tell game mode to load next map
+    Cast<ASinglePlayerGameMode>(UGameplayStatics::GetGameMode(this))->LoadNextLevel();
 }
