@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LevelList.h"
 #include "Target.h"
 #include "GameFramework/GameModeBase.h"
 #include "SinglePlayerGameMode.generated.h"
@@ -20,9 +21,17 @@ class NOT_ROCKET_SCIENCE_API ASinglePlayerGameMode : public AGameModeBase
 	virtual void BeginPlay() override;
 	
 	virtual void Tick(float DeltaSeconds) override;
-
+	
 protected:
 	void Win();
-
+	
+	
 	bool bGameEnded;
+
+	UPROPERTY(EditDefaultsOnly)
+	ULevelList* LevelList;
+	
+public:
+	UFUNCTION(Blueprintable)
+	void LoadNextLevel();
 };

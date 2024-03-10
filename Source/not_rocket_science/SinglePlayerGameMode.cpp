@@ -3,6 +3,7 @@
 
 #include "SinglePlayerGameMode.h"
 
+#include "SinglePlayerHud.h"
 #include "Kismet/GameplayStatics.h"
 
 ASinglePlayerGameMode::ASinglePlayerGameMode()
@@ -38,7 +39,35 @@ void ASinglePlayerGameMode::Tick(float DeltaSeconds)
 void ASinglePlayerGameMode::Win()
 {
 	bGameEnded = true;
-	// Show win screen.
+
+    AHUD* Hud =	UGameplayStatics::GetPlayerController(this,0)->GetHUD();
+	ASinglePlayerHud* SinglePlayerHud = Cast<ASinglePlayerHud>(Hud);
+	if (IsValid(SinglePlayerHud))
+	{
+		SinglePlayerHud->ShowWinScreen(0,0,0);
+	}
+}
+
+void ASinglePlayerGameMode::LoadNextLevel()
+{
+	FString CurrentLevelName = GetWorld()->GetPathName();
+	size_t CurrentLevelIndex = 999999;
+	for (size_t i = 0; i < LevelList->LevelList.Num(); i++)
+	{
+		TSoftObjectPtr<UWorld> Level = LevelList->LevelList[i];
+		FString LevelName = Level->GetPathName();
+		if (LevelName == CurrentLevelName)
+		{
+			CurrentLevelIndex = i;
+			break;
+		}
+	}
+	
+	if (CurrentLevelIndex + 1 >= LevelList->LevelList.Num())
+	{
+		return;
+	}
+	UGameplayStatics::OpenLevelBySoftObjectPtr(this, LevelList->LevelList[CurrentLevelIndex + 1]);
 }
 
 
