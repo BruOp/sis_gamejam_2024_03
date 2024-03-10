@@ -17,7 +17,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMeshComponent> ExplosionMesh;
 
 	UPROPERTY(EditAnywhere)

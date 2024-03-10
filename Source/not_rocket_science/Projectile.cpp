@@ -79,5 +79,6 @@ void AProjectile::Explode()
 	Destroy();
 
 	const FVector ProjectileLocation = GetTransform().GetLocation();
-	GetWorld()->SpawnActor(ExplosionActor, &ProjectileLocation, &FRotator::ZeroRotator);
+	const FRotator Rotator{ 90.0, 0.0, 0.0 };
+	GetWorld()->SpawnActor(ExplosionActor, &ProjectileLocation, &Rotator);
 }
