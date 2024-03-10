@@ -19,6 +19,7 @@ void AExplosion::BeginPlay()
 	CurrentScale = FMath::Lerp(StartScale, EndScale, NormalizedTimer);
 
 	ExplosionMesh->SetRelativeScale3D(FVector::One() * CurrentScale);
+	bDamaging = true;
 }
 
 void AExplosion::Tick(float DeltaTime)
@@ -28,15 +29,21 @@ void AExplosion::Tick(float DeltaTime)
 	NormalizedTimer += DeltaTime / ExpansionTime;
 	
 	CurrentScale = FMath::Lerp(StartScale, EndScale, FMath::Min(NormalizedTimer, 1.0f));
-	
+
+	// When the size exceeds the max scale for damage, do a final trace at the max size.
+	if (bDamaging && CurrentScale > DamageMaxScale)
+	{
+		ExplosionMesh->SetRelativeScale3D(FVector::One() * DamageMaxScale);
+		DealDamage();
+
+		bDamaging = false;
+	}
+
 	ExplosionMesh->SetRelativeScale3D(FVector::One() * CurrentScale);
 
-	TArray<AActor*> OverlappingActors;
-	ExplosionMesh->GetOverlappingActors(OverlappingActors, ATarget::StaticClass());
-
-	for (AActor* Actor : OverlappingActors)
+	if (bDamaging)
 	{
-		Cast<ATarget>(Actor)->Kill();
+		DealDamage();
 	}
 	
 	if (NormalizedTimer >= 1.0)
@@ -45,3 +52,13 @@ void AExplosion::Tick(float DeltaTime)
 	}
 }
 
+void AExplosion::DealDamage()
+{
+	TArray<AActor*> OverlappingActors;
+	ExplosionMesh->GetOverlappingActors(OverlappingActors, ATarget::StaticClass());
+
+	for (AActor* Actor : OverlappingActors)
+	{
+		Cast<ATarget>(Actor)->Kill();
+	}
+}
