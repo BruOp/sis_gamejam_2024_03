@@ -17,5 +17,5 @@ class NOT_ROCKET_SCIENCE_API ULevelList : public UDataAsset
 public:
 
 	UPROPERTY(EditAnywhere)
-	TArray<FName> LevelList;
+	TArray<TSoftObjectPtr<UWorld>> LevelList;
 };
