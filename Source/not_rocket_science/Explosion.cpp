@@ -3,6 +3,8 @@
 
 #include "Explosion.h"
 
+#include "Target.h"
+
 AExplosion::AExplosion()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -25,10 +27,18 @@ void AExplosion::Tick(float DeltaTime)
 
 	NormalizedTimer += DeltaTime / ExpansionTime;
 	
-	CurrentScale = FMath::Lerp(StartScale, EndScale, NormalizedTimer);
+	CurrentScale = FMath::Lerp(StartScale, EndScale, FMath::Min(NormalizedTimer, 1.0f));
 	
 	ExplosionMesh->SetRelativeScale3D(FVector::One() * CurrentScale);
 
+	TArray<AActor*> OverlappingActors;
+	ExplosionMesh->GetOverlappingActors(OverlappingActors, ATarget::StaticClass());
+
+	for (AActor* Actor : OverlappingActors)
+	{
+		Cast<ATarget>(Actor)->Kill();
+	}
+	
 	if (NormalizedTimer >= 1.0)
 	{
 		Destroy();
