@@ -18,13 +18,18 @@ public:
 	UFUNCTION(BlueprintCallable, Meta=(Category="Projectile"))
 	void SetVelocity(FVector NewVelocity);
 
+	UFUNCTION(BlueprintCallable)
+	bool GetIsDetonated()
+	{
+		return bIsDetonated;
+	}
+	
 protected:
 	virtual void BeginPlay() override;
 
 	void UpdatePosition(float DeltaTime);
 	
 	void UpdateVelocity(float DeltaTime);
-
 	
 	UPROPERTY()
 	TArray<TObjectPtr<AGravitationalBody>> GravitationalBodies;
@@ -33,7 +38,7 @@ protected:
 	FVector Velocity;
 
 	UPROPERTY()
-	bool bIsDestroyed;
+	bool bIsDetonated;
 
 	float TimeToAdvance;
 public:	
